@@ -1,11 +1,5 @@
-# Documentation folders (keep in repo)
-.architecture/
-.memory/
-.working/
-
 # Python
 venv/
-.venv/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -14,12 +8,6 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Django
 *.log
@@ -36,10 +24,3 @@ staticfiles/
 .idea/
 *.swp
 *.swo
-
-# Docker
-*.pid
-
-# OS
-.DS_Store
-Thumbs.db
