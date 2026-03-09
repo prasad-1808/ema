@@ -14,7 +14,5 @@ def health_check(request):
 
 urlpatterns = [
     path('', health_check, name='health-check'),
-    # API endpoints will be added here
-    # path('events/', include('apps.events.urls')),
-    # path('users/', include('apps.users.urls')),
+    path('users/', include('apps.users.urls')),
 ]

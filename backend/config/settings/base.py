@@ -24,9 +24,7 @@ INSTALLED_APPS = [
     'corsheaders',
     
     # Local apps
-    # 'apps.events',
-    # 'apps.users',
-    # 'apps.core',
+    'apps.users',
 ]
 
 MIDDLEWARE = [

@@ -14,20 +14,46 @@ type Pages = {
   "/": {
     params: {};
   };
+  "/home": {
+    params: {};
+  };
+  "/auth/login": {
+    params: {};
+  };
+  "/events/:slug": {
+    params: {
+      "slug": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
+    page: "/" | "/home" | "/auth/login" | "/events/:slug";
+  };
+  "routes/_index.tsx": {
+    id: "routes/_index";
     page: "/";
   };
   "routes/home.tsx": {
     id: "routes/home";
-    page: "/";
+    page: "/home";
+  };
+  "routes/auth/login.tsx": {
+    id: "routes/auth/login";
+    page: "/auth/login";
+  };
+  "routes/events/$slug.tsx": {
+    id: "routes/events/$slug";
+    page: "/events/:slug";
   };
 };
 
 type RouteModules = {
   "root": typeof import("./app/root.tsx");
+  "routes/_index": typeof import("./app/routes/_index.tsx");
   "routes/home": typeof import("./app/routes/home.tsx");
+  "routes/auth/login": typeof import("./app/routes/auth/login.tsx");
+  "routes/events/$slug": typeof import("./app/routes/events/$slug.tsx");
 };
