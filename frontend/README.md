@@ -34,6 +34,16 @@ npm run dev
 
 Your application will be available at `http://localhost:5173`.
 
+### Environment Variables
+
+Create a local env file before running the app:
+
+```bash
+cp .env.example .env
+```
+
+- `VITE_API_BASE_URL`: Backend base URL used by frontend API calls (default fallback: `http://localhost:8000`)
+
 ## Building for Production
 
 Create a production build:

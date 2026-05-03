@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { StoredImage } from "~/lib/image-store";
+import type { StoredImage } from "~/lib/image-store";
 
 interface ImagePreviewModalProps {
   image: StoredImage | null;

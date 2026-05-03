@@ -1,8 +1,8 @@
 
 import { useState, useCallback } from "react";
 import { Camera } from "lucide-react";
-import { EventType } from "~/lib/events";
-import { useImageStore, StoredImage } from "~/lib/image-store";
+import type { EventType } from "~/lib/events";
+import { useImageStore, type StoredImage } from "~/lib/image-store";
 import { ImageUpload } from "./image-upload";
 import { ImageGallery } from "./image-gallery";
 import { ImagePreviewModal } from "./image-preview-modal";
@@ -13,17 +13,23 @@ interface EventPageProps {
 }
 
 export function EventPage({ event }: EventPageProps) {
-  const { addImages, removeImage, getImagesByEvent } = useImageStore();
+  const addImages = useImageStore((state) => state.addImages);
+  const removeImage = useImageStore((state) => state.removeImage);
+  const allImages = useImageStore((state) => state.images);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<StoredImage | null>(null);
 
-  const eventImages = getImagesByEvent(event.slug);
+  const eventImages = allImages.filter((img) => img.eventSlug === event.slug);
 
   const handleUpload = useCallback(
     async (files: File[]) => {
+      console.log("Upload started with files:", files);
       setIsUploading(true);
       try {
         await addImages(event.slug, files);
+        console.log("Upload completed");
+      } catch (error) {
+        console.error("Upload error:", error);
       } finally {
         setIsUploading(false);
       }

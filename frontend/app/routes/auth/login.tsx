@@ -5,6 +5,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { FloralDecoration } from "~/components/floral-decoration";
+import { buildApiUrl } from "~/lib/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ export default function Login() {
     console.log("Attempting login with:", { email, password });
 
     try {
-      const response = await fetch("http://localhost:8000/api/users/login/", {
+      const response = await fetch(buildApiUrl("/api/users/login/"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

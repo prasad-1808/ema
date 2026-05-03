@@ -54,9 +54,13 @@ export function ImageUpload({ onUpload, isUploading }: ImageUploadProps) {
   }, []);
 
   const handleUpload = useCallback(() => {
+    console.log("handleUpload called, selectedFiles:", selectedFiles.length);
     if (selectedFiles.length > 0) {
+      console.log("Calling onUpload with files:", selectedFiles);
       onUpload(selectedFiles);
       setSelectedFiles([]);
+    } else {
+      console.log("No files selected");
     }
   }, [selectedFiles, onUpload]);
 

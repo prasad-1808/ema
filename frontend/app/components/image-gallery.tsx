@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Trash2, ImageIcon } from "lucide-react";
-import { StoredImage } from "~/lib/image-store";
+import type { StoredImage } from "~/lib/image-store";
 import { cn } from "~/lib/utils";
 
 interface ImageGalleryProps {

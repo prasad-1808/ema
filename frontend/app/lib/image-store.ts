@@ -22,6 +22,7 @@ export const useImageStore = create<ImageStore>()(
     (set, get) => ({
       images: [],
       addImages: async (eventSlug: string, files: File[]) => {
+        console.log("addImages called with:", eventSlug, files.length, "files");
         const newImages: StoredImage[] = await Promise.all(
           files.map(async (file) => {
             const url = await fileToDataUrl(file);
@@ -34,9 +35,12 @@ export const useImageStore = create<ImageStore>()(
             };
           })
         );
-        set((state) => ({
-          images: [...state.images, ...newImages],
-        }));
+        console.log("New images created:", newImages.length);
+        set((state) => {
+          const updated = [...state.images, ...newImages];
+          console.log("Store updated, total images:", updated.length);
+          return { images: updated };
+        });
       },
       removeImage: (id: string) => {
         set((state) => ({
