@@ -1,17 +1,24 @@
-
-import { Link, useLocation, NavLink } from "react-router";
-import { useState } from "react";
+import { useLocation, NavLink } from "react-router";
+import { useState, useEffect } from "react";
 import { Home, ChevronDown, Heart, Camera, LogOut } from "lucide-react";
-import { events } from "~/lib/events";
 import { cn } from "~/lib/utils";
+import { getUserEvents } from "~/lib/api";
+import { getStoredUser, clearAuth } from "~/lib/auth";
+import type { UserEvent } from "~/lib/types";
 
 export function AppSidebar() {
   const location = useLocation();
   const [eventsExpanded, setEventsExpanded] = useState(true);
+  const [userEvents, setUserEvents] = useState<UserEvent[]>([]);
+
+  useEffect(() => {
+    const user = getStoredUser();
+    if (!user) return;
+    getUserEvents(user.user_id).then(setUserEvents).catch(() => {});
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("user");
+    clearAuth();
     window.location.href = "/";
   };
 
@@ -45,48 +52,61 @@ export function AppSidebar() {
             </NavLink>
           </li>
 
-          <li>
-            <button
-              onClick={() => setEventsExpanded(!eventsExpanded)}
-              className={cn(
-                "flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
-                location.pathname.startsWith("/events")
-                  ? "bg-sidebar-accent text-sidebar-primary"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-              )}
-            >
-              <span className="flex items-center gap-3">
-                <Camera className="h-4 w-4" />
-                Events
-              </span>
-              <ChevronDown
+          {userEvents.length > 0 && (
+            <li>
+              <button
+                onClick={() => setEventsExpanded(!eventsExpanded)}
                 className={cn(
-                  "h-4 w-4 transition-transform duration-200",
-                  eventsExpanded && "rotate-180"
+                  "flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                  location.pathname.startsWith("/events")
+                    ? "bg-sidebar-accent text-sidebar-primary"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                 )}
-              />
-            </button>
+              >
+                <span className="flex items-center gap-3">
+                  <Camera className="h-4 w-4" />
+                  Events
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 transition-transform duration-200",
+                    eventsExpanded && "rotate-180"
+                  )}
+                />
+              </button>
 
-            {eventsExpanded && (
-              <ul className="mt-1 ml-4 pl-4 border-l border-sidebar-border space-y-1">
-                {events.map((event) => (
-                  <li key={event.id}>
-                    <a
-                      href={`/events/${event.slug}`}
-                      className={cn(
-                        "block px-4 py-2 rounded-lg text-sm transition-all duration-200",
-                        location.pathname === `/events/${event.slug}`
-                          ? "bg-sidebar-accent text-sidebar-primary font-medium"
-                          : "text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
-                      )}
-                    >
-                      {event.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
+              {eventsExpanded && (
+                <ul className="mt-1 ml-4 pl-4 border-l border-sidebar-border space-y-1">
+                  {userEvents.flatMap(({ event }) => {
+                    const links: { label: string; path: string }[] = [];
+                    if (event.has_marriage)
+                      links.push({ label: `${event.event_name} · Marriage`, path: `/events/${event.event_id}/marriage` });
+                    if (event.has_engagement)
+                      links.push({ label: `${event.event_name} · Engagement`, path: `/events/${event.event_id}/engagement` });
+                    if (event.has_reception)
+                      links.push({ label: `${event.event_name} · Reception`, path: `/events/${event.event_id}/reception` });
+                    return links;
+                  }).map(({ label, path }) => (
+                    <li key={path}>
+                      <NavLink
+                        to={path}
+                        className={({ isActive }) =>
+                          cn(
+                            "block px-4 py-2 rounded-lg text-sm transition-all duration-200",
+                            isActive
+                              ? "bg-sidebar-accent text-sidebar-primary font-medium"
+                              : "text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                          )
+                        }
+                      >
+                        {label}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          )}
         </ul>
       </nav>
 
@@ -98,9 +118,7 @@ export function AppSidebar() {
           <LogOut className="h-4 w-4" />
           Logout
         </button>
-        <p className="text-xs text-muted-foreground text-center">
-          Made with love
-        </p>
+        <p className="text-xs text-muted-foreground text-center">Made with love</p>
       </div>
     </aside>
   );

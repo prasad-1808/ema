@@ -13,6 +13,8 @@ def health_check(request):
     })
 
 urlpatterns = [
-    path('', health_check, name='health-check'),
-    path('users/', include('apps.users.urls')),
+    path("", health_check, name="health-check"),
+    path("", include("apps.users.urls")),
+    path("", include("apps.ceremonies.urls")),
+    path("", include("apps.events.urls")),
 ]

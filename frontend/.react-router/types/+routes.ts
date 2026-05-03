@@ -20,9 +20,13 @@ type Pages = {
   "/auth/login": {
     params: {};
   };
-  "/events/:slug": {
+  "/auth/register": {
+    params: {};
+  };
+  "/events/:eventId/:ceremony": {
     params: {
-      "slug": string;
+      "eventId": string;
+      "ceremony": string;
     };
   };
 };
@@ -30,7 +34,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/home" | "/auth/login" | "/events/:slug";
+    page: "/" | "/home" | "/auth/login" | "/auth/register" | "/events/:eventId/:ceremony";
   };
   "routes/_index.tsx": {
     id: "routes/_index";
@@ -44,9 +48,13 @@ type RouteFiles = {
     id: "routes/auth/login";
     page: "/auth/login";
   };
+  "routes/auth/register.tsx": {
+    id: "routes/auth/register";
+    page: "/auth/register";
+  };
   "routes/events/$slug.tsx": {
     id: "routes/events/$slug";
-    page: "/events/:slug";
+    page: "/events/:eventId/:ceremony";
   };
 };
 
@@ -55,5 +63,6 @@ type RouteModules = {
   "routes/_index": typeof import("./app/routes/_index.tsx");
   "routes/home": typeof import("./app/routes/home.tsx");
   "routes/auth/login": typeof import("./app/routes/auth/login.tsx");
+  "routes/auth/register": typeof import("./app/routes/auth/register.tsx");
   "routes/events/$slug": typeof import("./app/routes/events/$slug.tsx");
 };
